@@ -11,6 +11,7 @@ API de validaciones en Node.js con Express y Mongoose. Esta API proporciona endp
 - Documentación Swagger completa
 - Manejo de errores consistente
 - Seguridad con Helmet y CORS configurado
+- **Rate limiting** para protección contra ataques de denegación de servicio (100 peticiones / 15 min)
 
 ## 📋 Requisitos Previos
 
