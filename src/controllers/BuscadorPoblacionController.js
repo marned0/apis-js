@@ -38,7 +38,7 @@ const buscarPorPoblacion = async (req, res, next) => {
     const resultados = await Direcciones.find({
       poblacion: { $regex: new RegExp(`^${poblacionEscapada}$`, 'i') }
     })
-      .select('codigoPostal poblacion provincia pais')
+      .select('codigo_postal poblacion provincia pais')
       .lean();
 
     if (resultados.length === 0) {
@@ -46,7 +46,7 @@ const buscarPorPoblacion = async (req, res, next) => {
       const resultadosParciales = await Direcciones.find({
         poblacion: { $regex: new RegExp(poblacionEscapada, 'i') }
       })
-        .select('codigoPostal poblacion provincia pais')
+        .select('codigo_postal poblacion provincia pais')
         .lean();
 
       if (resultadosParciales.length === 0) {
@@ -60,8 +60,8 @@ const buscarPorPoblacion = async (req, res, next) => {
         });
       }
 
-      // Usar resultados parciales
-      const codigosPostales = [...new Set(resultadosParciales.map(r => r.codigoPostal))].sort();
+      // Usar resultados parciales - usar codigo_postal del documento
+      const codigosPostales = [...new Set(resultadosParciales.map(r => r.codigo_postal))].sort();
       const primerResultado = resultadosParciales[0];
 
       return res.json({
@@ -74,8 +74,8 @@ const buscarPorPoblacion = async (req, res, next) => {
       });
     }
 
-    // Extraer códigos postales únicos
-    const codigosPostales = [...new Set(resultados.map(r => r.codigoPostal))].sort();
+    // Extraer códigos postales únicos - usar codigo_postal del documento
+    const codigosPostales = [...new Set(resultados.map(r => r.codigo_postal))].sort();
     const primerResultado = resultados[0];
 
     res.json({

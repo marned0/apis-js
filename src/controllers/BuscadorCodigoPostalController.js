@@ -23,9 +23,9 @@ const buscarPorCodigoPostal = async (req, res, next) => {
       });
     }
 
-    // Buscar en la base de datos
-    const resultados = await Direcciones.find({ codigoPostal })
-      .select('codigoPostal poblacion provincia pais')
+    // Buscar en la base de datos usando el nombre de campo de la BD (codigo_postal)
+    const resultados = await Direcciones.find({ codigo_postal: codigoPostal })
+      .select('codigo_postal poblacion provincia pais')
       .lean();
 
     if (resultados.length === 0) {

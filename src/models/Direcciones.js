@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const DireccionesSchema = new mongoose.Schema({
-  codigoPostal: {
+  codigo_postal: {
     type: String,
     required: true,
     maxlength: 15,
@@ -30,6 +30,6 @@ const DireccionesSchema = new mongoose.Schema({
 });
 
 // Índice compuesto para búsquedas eficientes
-DireccionesSchema.index({ codigoPostal: 1, poblacion: 1 });
+DireccionesSchema.index({ codigo_postal: 1, poblacion: 1 });
 
 module.exports = mongoose.model('Direcciones', DireccionesSchema);
