@@ -6,6 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const rateLimit = require('express-rate-limit');
 
 const apiRoutes = require('./routes/api');
 const { errorHandler, notFoundHandler } = require('./middleware/errorHandler');
@@ -18,11 +19,34 @@ const { setupSwagger } = require('../swagger/swagger');
 const createApp = () => {
   const app = express();
 
-  // Seguridad con Helmet
+  // Seguridad con Helmet - CSP configurado para Swagger UI
   app.use(helmet({
-    contentSecurityPolicy: false, // Desactivar para Swagger UI
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+        fontSrc: ["'self'", "https://fonts.gstatic.com"],
+        imgSrc: ["'self'", "data:", "https://validator.swagger.io"],
+        connectSrc: ["'self'"]
+      }
+    },
     crossOriginEmbedderPolicy: false
   }));
+
+  // Rate limiting para protección contra ataques de denegación de servicio
+  const apiLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100, // límite de 100 peticiones por ventana por IP
+    message: {
+      error: true,
+      mensaje: 'Demasiadas peticiones desde esta IP. Por favor, inténtelo de nuevo después de 15 minutos.',
+      errores: [],
+      timestamp: new Date().toISOString()
+    },
+    standardHeaders: true,
+    legacyHeaders: false
+  });
 
   // CORS
   app.use(cors({
@@ -69,8 +93,8 @@ const createApp = () => {
     });
   });
 
-  // Rutas de la API
-  app.use('/api', apiRoutes);
+  // Rutas de la API con rate limiting
+  app.use('/api', apiLimiter, apiRoutes);
 
   // Manejo de rutas no encontradas
   app.use(notFoundHandler);

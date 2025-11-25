@@ -165,17 +165,9 @@ const validarIBAN = (iban) => {
     };
   }
 
-  // Para IBAN español, extraer más detalles
-  let codigoBanco = '';
-  let numeroCuenta = '';
-  
-  if (codigoPais === 'ES') {
-    codigoBanco = ibanLimpio.substring(4, 8);
-    numeroCuenta = ibanLimpio.substring(8);
-  } else {
-    codigoBanco = ibanLimpio.substring(4, 8);
-    numeroCuenta = ibanLimpio.substring(8);
-  }
+  // Extraer código de banco y número de cuenta
+  const codigoBanco = ibanLimpio.substring(4, 8);
+  const numeroCuenta = ibanLimpio.substring(8);
 
   return {
     iban: ibanLimpio,

@@ -160,12 +160,13 @@ const validarCIF = (documento) => {
 
   for (let i = 0; i < 7; i++) {
     const digito = parseInt(numeros.charAt(i), 10);
+    const posicion = i + 1; // Posición 1-indexed para el algoritmo CIF
     
-    if ((i + 1) % 2 === 0) {
-      // Posiciones pares (2, 4, 6)
+    if (posicion % 2 === 0) {
+      // Posiciones pares en numeración 1-indexed (2ª, 4ª, 6ª) - se suman directamente
       sumaPares += digito;
     } else {
-      // Posiciones impares (1, 3, 5, 7) - multiplicar por 2 y sumar dígitos
+      // Posiciones impares en numeración 1-indexed (1ª, 3ª, 5ª, 7ª) - multiplicar por 2 y sumar dígitos
       const doble = digito * 2;
       sumaImpares += doble > 9 ? doble - 9 : doble;
     }
